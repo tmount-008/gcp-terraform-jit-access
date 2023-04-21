@@ -1,6 +1,5 @@
 # gcp-terraform-jit-access
-- Future changes
-  - CloudRun as alternative
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
