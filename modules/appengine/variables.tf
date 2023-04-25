@@ -2,19 +2,11 @@ variable "jit_deployment_project" {
   type = string
 }
 
-variable "jit_deployment_type" {
+variable "jit_sa_email" {
   type = string
   # description = "One of \"appengine\" or \"cloudrun\"."
-  description = "\"appengine\"."
-  validation {
-    condition = anytrue([
-      var.jit_deployment_type == "appengine",
-      # var.jit_deployment_type == "cloudrun",
-    ])
-    # error_message = "Just-in-Time deployment type must be one of \"appengine\" or \"cloudrun\"."
-    error_message = "Just-in-Time deployment type must be \"appengine\"."
-  }
-  default = "appengine"
+  description = "Email of service account to use for JIT deployment"
+
 }
 
 variable "jit_deployment_version" {
@@ -90,5 +82,6 @@ variable "provisioner_interpreter" {
     ])
     error_message = "'sh' for Linux, 'cmd' for Windows"
   }
+
   default = "sh"
 }

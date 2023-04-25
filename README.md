@@ -1,11 +1,41 @@
-# gcp-terraform-jit-access
+# Google Cloud Just-In-Time Access Provisioning Module
+This module deploys the infrastructure needed for just-in-time privileged access management in Google Cloud. The resources/services/activations/deletions that this module will create/trigger are:
 
-<!-- BEGIN_TF_DOCS -->
+- Create an AppEngine application
+- Create a Cloud Storage bucket for AppEngine source content
+- Enable the OAuth consent screen for the AppEngine project
+- Download and package the [Just-in-Time Access application](https://github.com/GoogleCloudPlatform/jit-access)
+- Deploy an empty default service to AppEngine
+- Deploy the Just-in-Time Access application to AppEngine
+
 ## Requirements
 
-Terraform runner requires these tools to be installed
+The system running Terraform must have these tools installed
 - git
 - zip
+
+## Usage
+- Reference: https://cloud.google.com/architecture/manage-just-in-time-privileged-access-to-project 
+- Complete steps under ["Before you begin"](https://cloud.google.com/architecture/manage-just-in-time-privileged-access-to-project#before-you-begin)
+  1. Determine what scope you want to deploy Just-in-Time Access for (project, folder, or organization)
+  2. Grant appropraite access to the user or service account completing the deployment
+  3. Create a Google Cloud project for the deployment
+- Use this module to deploy Just-in-Time Access Provisioning to AppEngine
+- These steps must be completed manually because they are not available via an API
+  - Enable [IAP](https://console.cloud.google.com/security/iap) for the service
+    - ![Enable IAP for AppEngine](./images/enable-iap-01.jpg)
+  - If required, change the [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent) **User type** to **External**
+    1. ![External OAuth Consent Screen](./images/external-oauth-01.jpg)
+    2. ![External OAuth Consent Screen](./images/external-oauth-02.jpg)
+  - If required, grant access to the Service Account to resolve group membership information from your [Cloud Identity or Google Workspace account](https://cloud.google.com/architecture/manage-just-in-time-privileged-access-to-project#grant_access_to_allow_the_application_to_resolve_group_memberships)
+- Enable access to the Just-in-Time Access application
+  - Grant the **IAP-secured web app user** Role
+    - Lets users open the Just-In-Time Access application, but does not provide them access to any additional resources yet
+- Grant access to resources following your standard process, only adding the  `has({}.jitAccessConstraint)` condition
+  1. ![Conditional IAM Grant](./images/conditional-iam-grant-01.jpg)
+  2. ![Conditional IAM Grant](./images/conditional-iam-grant-02.jpg)
+
+<!-- BEGIN_TF_DOCS -->
 
 ## Providers
 
@@ -14,35 +44,6 @@ Terraform runner requires these tools to be installed
 | <a name="provider_google"></a> [google](#provider\_google) | 4.62.1 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.2.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.5.1 |
-
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_jit_sa"></a> [jit\_sa](#module\_jit\_sa) | terraform-google-modules/service-accounts/google | ~> 4.2 |
-| <a name="module_jit_services"></a> [jit\_services](#module\_jit\_services) | terraform-google-modules/project-factory/google//modules/project_services | ~> 14.2 |
-
-## Resources
-
-| Name | Type |
-|------|------|
-| [google_app_engine_application.jit](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/app_engine_application) | resource |
-| [google_app_engine_standard_app_version.default_service](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/app_engine_standard_app_version) | resource |
-| [google_app_engine_standard_app_version.jit](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/app_engine_standard_app_version) | resource |
-| [google_folder_iam_member.cloudasset_viewer](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_member) | resource |
-| [google_folder_iam_member.iam_securityAdmin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_member) | resource |
-| [google_iap_brand.iap_brand](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iap_brand) | resource |
-| [google_organization_iam_member.cloudasset_viewer](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_member) | resource |
-| [google_organization_iam_member.iam_securityAdmin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_member) | resource |
-| [google_project_iam_member.cloudasset_viewer](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
-| [google_project_iam_member.iam_securityAdmin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
-| [google_storage_bucket.jit_source](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket) | resource |
-| [google_storage_bucket_iam_member.jit_source](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
-| [google_storage_bucket_object.default_service_index_html](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_object) | resource |
-| [google_storage_bucket_object.jit_source](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_object) | resource |
-| [null_resource.jit_source](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [null_resource.jit_source_cleanup](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [random_string.jit_source](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 
 ## Inputs
 
