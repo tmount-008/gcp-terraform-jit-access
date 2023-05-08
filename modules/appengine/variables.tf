@@ -45,3 +45,21 @@ variable "iap_support_email" {
   description = ""
 }
 
+variable "gcs_bucket_location" {
+  type        = string
+  description = ""
+}
+
+variable "provisioner_interpreter" {
+  type        = string
+  description = "'sh' for Linux(default), 'cmd' for Windows"
+  validation {
+    condition = anytrue([
+      var.provisioner_interpreter == "cmd",
+      var.provisioner_interpreter == "sh",
+    ])
+    error_message = "'sh' for Linux, 'cmd' for Windows"
+  }
+
+  default = "sh"
+}
