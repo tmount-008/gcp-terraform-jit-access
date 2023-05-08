@@ -8,6 +8,10 @@ variable "jit_sa_email" {
 
 }
 
+variable "jit_deployment_version" {
+  type = string
+}
+
 variable "jit_deployment_region" {
   type = string
 }
