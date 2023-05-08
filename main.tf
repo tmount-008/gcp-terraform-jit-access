@@ -43,6 +43,55 @@ resource "google_iap_brand" "iap_brand" {
   project           = var.jit_deployment_project
 }
 
+## Project IAM Grant - iam.securityAdmin
+resource "google_project_iam_member" "iam_securityAdmin" {
+  count   = var.jit_scope == "projects" ? 1 : 0
+  project = var.jit_scope_id
+  role    = "roles/iam.securityAdmin"
+  member  = "serviceAccount:${module.jit_sa.email}"
+}
+
+## Project IAM Grant - cloudasset.viewer
+resource "google_project_iam_member" "cloudasset_viewer" {
+  count   = var.jit_scope == "projects" ? 1 : 0
+  project = var.jit_scope_id
+  role    = "roles/cloudasset.viewer"
+  member  = "serviceAccount:${module.jit_sa.email}"
+}
+
+## Folder IAM Grant - iam.securityAdmin
+resource "google_folder_iam_member" "iam_securityAdmin" {
+  count  = var.jit_scope == "folders" ? 1 : 0
+  folder = "folders/${var.jit_scope_id}"
+  role   = "roles/iam.securityAdmin"
+  member = "serviceAccount:${module.jit_sa.email}"
+}
+
+## Folder IAM Grant - cloudasset.viewer
+resource "google_folder_iam_member" "cloudasset_viewer" {
+  count  = var.jit_scope == "folders" ? 1 : 0
+  folder = "folders/${var.jit_scope_id}"
+  role   = "roles/cloudasset.viewer"
+  member = "serviceAccount:${module.jit_sa.email}"
+}
+
+## Organization IAM Grant - iam.securityAdmin
+resource "google_organization_iam_member" "iam_securityAdmin" {
+  count  = var.jit_scope == "organizations" ? 1 : 0
+  org_id = var.jit_scope_id
+  role   = "roles/iam.securityAdmin"
+  member = "serviceAccount:${module.jit_sa.email}"
+}
+
+## Organization IAM Grant - cloudasset.viewer
+resource "google_organization_iam_member" "cloudasset_viewer" {
+  count  = var.jit_scope == "organizations" ? 1 : 0
+  org_id = var.jit_scope_id
+  role   = "roles/cloudasset.viewer"
+  member = "serviceAccount:${module.jit_sa.email}"
+}
+
+## AppEngine Deployment
 module "appengine" {
   source = "./modules/appengine"
   count  = var.jit_deployment_type == "appengine" ? 1 : 0
@@ -66,7 +115,8 @@ module "appengine" {
 }
 
 
-## Staged for future use
+##### Staged for future use
+## CloudRun Deployment
 # module "cloudrun" {
 #   source = "./modules/cloudrun"
 #   count  = var.jit_deployment_type == "cloudrun" ? 1 : 0

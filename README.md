@@ -9,7 +9,6 @@ This module deploys the infrastructure needed for just-in-time privileged access
 - Deploy the Just-in-Time Access application to AppEngine
 
 ## Requirements
-
 The system running Terraform must have these tools installed
 - git
 - zip
@@ -25,15 +24,15 @@ The system running Terraform must have these tools installed
   - Enable [IAP](https://console.cloud.google.com/security/iap) for the service
     - ![Enable IAP for AppEngine](./images/enable-iap-01.jpg)
   - If required, change the [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent) **User type** to **External**
-    1. ![External OAuth Consent Screen](./images/external-oauth-01.jpg)
-    2. ![External OAuth Consent Screen](./images/external-oauth-02.jpg)
+    - ![External OAuth Consent Screen](./images/external-oauth-01.jpg)
+    -  ![External OAuth Consent Screen](./images/external-oauth-02.jpg)
   - If required, grant access to the Service Account to resolve group membership information from your [Cloud Identity or Google Workspace account](https://cloud.google.com/architecture/manage-just-in-time-privileged-access-to-project#grant_access_to_allow_the_application_to_resolve_group_memberships)
 - Enable access to the Just-in-Time Access application
   - Grant the **IAP-secured web app user** Role
     - Lets users open the Just-In-Time Access application, but does not provide them access to any additional resources yet
 - Grant access to resources following your standard process, only adding the  `has({}.jitAccessConstraint)` condition
-  1. ![Conditional IAM Grant](./images/conditional-iam-grant-01.jpg)
-  2. ![Conditional IAM Grant](./images/conditional-iam-grant-02.jpg)
+  - ![Conditional IAM Grant](./images/conditional-iam-grant-01.jpg)
+  - ![Conditional IAM Grant](./images/conditional-iam-grant-02.jpg)
 
 <!-- BEGIN_TF_DOCS -->
 

@@ -5,11 +5,30 @@ variable "jit_deployment_project" {
 variable "jit_sa_email" {
   type        = string
   description = "Email of service account to use for JIT deployment"
+}
 
+variable "jit_deployment_version" {
+  type    = string
+  default = "v1"
 }
 
 variable "jit_deployment_region" {
   type = string
+}
+
+variable "jit_sa_name" {
+  type    = list(string)
+  default = ["jitaccess"]
+}
+
+variable "jit_sa_display_name" {
+  type    = string
+  default = "Just-In-Time Access"
+}
+
+variable "jit_sa_description" {
+  type    = string
+  default = "Just-In-Time Access"
 }
 
 variable "jit_scope" {
@@ -27,6 +46,7 @@ variable "jit_scope" {
 
 variable "jit_deployment_env_variables" {
   default = {
+    # RESOURCE_SCOPE        = "${var.jit_scope}/${var.jit_scope_id}"
     ELEVATION_DURATION    = "60"
     JUSTIFICATION_HINT    = "Bug or case number"
     JUSTIFICATION_PATTERN = ".*"
@@ -45,3 +65,21 @@ variable "iap_support_email" {
   description = ""
 }
 
+variable "gcs_bucket_location" {
+  type        = string
+  description = ""
+}
+
+variable "provisioner_interpreter" {
+  type        = string
+  description = "'sh' for Linux(default), 'cmd' for Windows"
+  validation {
+    condition = anytrue([
+      var.provisioner_interpreter == "cmd",
+      var.provisioner_interpreter == "sh",
+    ])
+    error_message = "'sh' for Linux, 'cmd' for Windows"
+  }
+
+  default = "sh"
+}
