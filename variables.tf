@@ -2,6 +2,11 @@ variable "jit_deployment_project" {
   type = string
 }
 
+variable "jit_deployment_name" {
+  type    = string
+  default = "jit"
+}
+
 variable "jit_deployment_type" {
   type = string
   # description = "One of \"appengine\" or \"cloudrun\"."
@@ -9,10 +14,9 @@ variable "jit_deployment_type" {
   validation {
     condition = anytrue([
       var.jit_deployment_type == "appengine",
-      # var.jit_deployment_type == "cloudrun",
+      var.jit_deployment_type == "cloudrun",
     ])
-    # error_message = "Just-in-Time deployment type must be one of \"appengine\" or \"cloudrun\"."
-    error_message = "Just-in-Time deployment type must be \"appengine\"."
+    error_message = "Just-in-Time deployment type must be one of \"appengine\" or \"cloudrun\"."
   }
   default = "appengine"
 }
@@ -23,7 +27,8 @@ variable "jit_deployment_version" {
 }
 
 variable "jit_deployment_region" {
-  type = string
+  type        = string
+  description = "Region to deploy appengine or cloudrun resources. Region selected must be one that supports the corresponding service."
 }
 
 variable "jit_sa_name" {
@@ -91,4 +96,10 @@ variable "provisioner_interpreter" {
     error_message = "'sh' for Linux, 'cmd' for Windows"
   }
   default = "sh"
+}
+
+variable "jit_cloudrun_image" {
+  type        = string
+  description = "Image name and tag to use for cloud run deployment"
+  default     = null
 }

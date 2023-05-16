@@ -2,6 +2,10 @@ variable "jit_deployment_project" {
   type = string
 }
 
+variable "jit_deployment_name" {
+  type = string
+}
+
 variable "jit_sa_email" {
   type        = string
   description = "Email of service account to use for JIT deployment"

@@ -2,33 +2,18 @@ variable "jit_deployment_project" {
   type = string
 }
 
+variable "jit_deployment_name" {
+  type = string
+}
+
 variable "jit_sa_email" {
   type        = string
   description = "Email of service account to use for JIT deployment"
 }
 
-variable "jit_deployment_version" {
-  type    = string
-  default = "v1"
-}
 
 variable "jit_deployment_region" {
   type = string
-}
-
-variable "jit_sa_name" {
-  type    = list(string)
-  default = ["jitaccess"]
-}
-
-variable "jit_sa_display_name" {
-  type    = string
-  default = "Just-In-Time Access"
-}
-
-variable "jit_sa_description" {
-  type    = string
-  default = "Just-In-Time Access"
 }
 
 variable "jit_scope" {
@@ -60,26 +45,30 @@ variable "jit_scope_id" {
   description = "project id, folder id, or organization id depending on the jit_scope being applied"
 }
 
-variable "iap_support_email" {
-  type        = string
-  description = ""
+variable "jit_iap_brand" {
+  type = string
 }
 
-variable "gcs_bucket_location" {
-  type        = string
-  description = ""
-}
+# variable "gcs_bucket_location" {
+#   type        = string
+#   description = ""
+# }
 
-variable "provisioner_interpreter" {
-  type        = string
-  description = "'sh' for Linux(default), 'cmd' for Windows"
-  validation {
-    condition = anytrue([
-      var.provisioner_interpreter == "cmd",
-      var.provisioner_interpreter == "sh",
-    ])
-    error_message = "'sh' for Linux, 'cmd' for Windows"
-  }
+# variable "provisioner_interpreter" {
+#   type        = string
+#   description = "'sh' for Linux(default), 'cmd' for Windows"
+#   validation {
+#     condition = anytrue([
+#       var.provisioner_interpreter == "cmd",
+#       var.provisioner_interpreter == "sh",
+#     ])
+#     error_message = "'sh' for Linux, 'cmd' for Windows"
+#   }
 
-  default = "sh"
+#   default = "sh"
+# }
+
+variable "jit_cloudrun_image" {
+  type        = string
+  description = "Image name and tag to use for cloud run deployment"
 }

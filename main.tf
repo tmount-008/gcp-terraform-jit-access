@@ -51,6 +51,8 @@ resource "google_project_iam_member" "iam_securityAdmin" {
   member  = "serviceAccount:${module.jit_sa.email}"
 }
 
+
+
 ## Project IAM Grant - cloudasset.viewer
 resource "google_project_iam_member" "cloudasset_viewer" {
   count   = var.jit_scope == "projects" ? 1 : 0
@@ -103,6 +105,7 @@ module "appengine" {
 
   jit_deployment_project       = var.jit_deployment_project
   jit_deployment_version       = var.jit_deployment_version
+  jit_deployment_name          = var.jit_deployment_name
   jit_deployment_region        = var.jit_deployment_region
   jit_scope                    = var.jit_scope
   jit_deployment_env_variables = var.jit_deployment_env_variables
@@ -114,16 +117,26 @@ module "appengine" {
 
 }
 
+output "test" {
+  value = module.cloudrun[0].test
+}
 
-##### Staged for future use
-## CloudRun Deployment
-# module "cloudrun" {
-#   source = "./modules/cloudrun"
-#   count  = var.jit_deployment_type == "cloudrun" ? 1 : 0
-#   depends_on = [
-#     module.jit_services,
-#     module.jit_sa,
-#     google_iap_brand.iap_brand
-#   ]
-
-# }
+# CloudRun Deployment
+module "cloudrun" {
+  source = "./modules/cloudrun"
+  count  = var.jit_deployment_type == "cloudrun" ? 1 : 0
+  depends_on = [
+    module.jit_services,
+    module.jit_sa,
+    google_iap_brand.iap_brand
+  ]
+  jit_deployment_project       = var.jit_deployment_project
+  jit_deployment_name          = var.jit_deployment_name
+  jit_deployment_region        = var.jit_deployment_region
+  jit_scope                    = var.jit_scope
+  jit_deployment_env_variables = var.jit_deployment_env_variables
+  jit_scope_id                 = var.jit_scope_id
+  jit_sa_email                 = module.jit_sa.email
+  jit_cloudrun_image           = var.jit_cloudrun_image
+  jit_iap_brand                = google_iap_brand.iap_brand.name
+}
